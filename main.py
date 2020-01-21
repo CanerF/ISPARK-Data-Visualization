@@ -37,7 +37,7 @@ class ISPARK():
         return __dataFrame
 
 # Dataframe Features
-#print(ISPARK(df_Ispark).getColumns())
+print(ISPARK(df_Ispark).getColumns())
 
 # Dataframe Info
 #print(ISPARK(df_Ispark).getInfo())
@@ -67,7 +67,7 @@ df_Ispark["Saat48"] = tarife48['Saat48'].str.lower()
 df_Ispark["Ücret48"] = tarife48['Ücret48']
 
 
-# Section - 2 | Handling Data Types
+# Section - 2 | Data Preparation
 def delete_spaces(dataframe):
     counter = 0
     for value in dataframe:
@@ -77,19 +77,57 @@ def delete_spaces(dataframe):
     return dataframe
 
 def delete_unwanted_rows(dataframe,feauture, wanted_value):
-    counter = 0
-    for value in feauture:
-        if value != wanted_value:
-            dataframe = ISPARK(dataframe).drop_row(counter)
-            counter +=1
-        else:
-            counter +=1
-            continue
+
+    list_index = list(dataframe.index)
+    for i in list_index:
+            if feauture[i] != wanted_value:
+                dataframe = ISPARK(dataframe).drop_row(i)
+            else:
+                continue
     return dataframe
 
 df_Ispark['Saat01'] = df_Ispark['Saat01'].astype(str)
 df_Ispark["Saat01"] = delete_spaces(df_Ispark["Saat01"])
+df_Ispark['Saat12'] = df_Ispark['Saat12'].astype(str)
+df_Ispark["Saat12"] = delete_spaces(df_Ispark["Saat12"])
+df_Ispark['Saat24'] = df_Ispark['Saat24'].astype(str)
+df_Ispark["Saat24"] = delete_spaces(df_Ispark["Saat24"])
+df_Ispark['Saat48'] = df_Ispark['Saat48'].astype(str)
+df_Ispark["Saat48"] = delete_spaces(df_Ispark["Saat48"])
 df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat01'], "0-1saat")
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat12'], "1-2saat")
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat24'], "2-4saat")
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat48'], "4-8saat")
+
+def convert_float(dataframe):
+    counter = 0
+    for value in dataframe:
+        value = value.replace(",", ".")
+        value = float(value)
+        dataframe.iloc[counter] = value
+        counter += 1
+    return dataframe
+
+
+m_Ücret01 = convert_float(df_Ispark['Ücret01']).mean()
+m_Ücret12 = convert_float(df_Ispark['Ücret12']).mean()
+m_Ücret24 = convert_float(df_Ispark['Ücret24']).mean()
+m_Ücret48 = convert_float(df_Ispark['Ücret48']).mean()
+m_Ücret = [m_Ücret01.round(2), m_Ücret12.round(2), m_Ücret24.round(2), m_Ücret48.round(2)]
+
+
+
+# Section - 3 | Bar Plot
+
+m_Ücret = m_Ücret
+m_Saat = ('0-1 Saat', '1-2 Saat', '2-4 Saat', '4-8 Saat')
+y_pos = np.arange(len(m_Saat))
+plt.bar(y_pos, m_Ücret)
+plt.xticks(y_pos, m_Saat)
+plt.show()
+
+
+
 
 
 
