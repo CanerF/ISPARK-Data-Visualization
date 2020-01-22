@@ -124,6 +124,9 @@ m_Saat = ('0-1 Saat', '1-2 Saat', '2-4 Saat', '4-8 Saat')
 y_pos = np.arange(len(m_Saat))
 plt.bar(y_pos, m_Ücret)
 plt.xticks(y_pos, m_Saat)
+plt.title("Average Park Price per Time Period")
+plt.xlabel("Time Period")
+plt.ylabel("Price")
 plt.show()
 
 
