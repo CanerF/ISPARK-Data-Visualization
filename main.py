@@ -10,12 +10,6 @@ df_Ispark = pd.read_excel(path, sheetName)
 class ISPARK():
     def __init__(self, dataFrame):
         self.__dataFrame = dataFrame
-    def getColumns(self):
-        Features = self.__dataFrame.columns
-        return Features
-    def getInfo(self):
-        Info = self.__dataFrame.info()
-        return Info
     def getCorr(self):
         Corr = self.__dataFrame.corr()
         return  Corr
@@ -37,10 +31,10 @@ class ISPARK():
         return __dataFrame
 
 # Dataframe Features
-print(ISPARK(df_Ispark).getColumns())
+print(df_Ispark.columns)
 
 # Dataframe Info
-#print(ISPARK(df_Ispark).getInfo())
+print(df_Ispark.info())
 
 # Corr Map
 #f,ax = plt.subplots(figsize=(18, 18))
@@ -86,20 +80,7 @@ def delete_unwanted_rows(dataframe,feauture, wanted_value):
                 continue
     return dataframe
 
-df_Ispark['Saat01'] = df_Ispark['Saat01'].astype(str)
-df_Ispark["Saat01"] = delete_spaces(df_Ispark["Saat01"])
-df_Ispark['Saat12'] = df_Ispark['Saat12'].astype(str)
-df_Ispark["Saat12"] = delete_spaces(df_Ispark["Saat12"])
-df_Ispark['Saat24'] = df_Ispark['Saat24'].astype(str)
-df_Ispark["Saat24"] = delete_spaces(df_Ispark["Saat24"])
-df_Ispark['Saat48'] = df_Ispark['Saat48'].astype(str)
-df_Ispark["Saat48"] = delete_spaces(df_Ispark["Saat48"])
-df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat01'], "0-1saat")
-df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat12'], "1-2saat")
-df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat24'], "2-4saat")
-df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat48'], "4-8saat")
-
-def convert_float(dataframe):
+def convert_and_replace(dataframe):
     counter = 0
     for value in dataframe:
         value = value.replace(",", ".")
@@ -108,28 +89,42 @@ def convert_float(dataframe):
         counter += 1
     return dataframe
 
+df_Ispark['Saat01'] = df_Ispark['Saat01'].astype(str)
+df_Ispark["Saat01"] = delete_spaces(df_Ispark["Saat01"])
+df_Ispark['Saat12'] = df_Ispark['Saat12'].astype(str)
+df_Ispark["Saat12"] = delete_spaces(df_Ispark["Saat12"])
+df_Ispark['Saat24'] = df_Ispark['Saat24'].astype(str)
+df_Ispark["Saat24"] = delete_spaces(df_Ispark["Saat24"])
+df_Ispark['Saat48'] = df_Ispark['Saat48'].astype(str)
+df_Ispark["Saat48"] = delete_spaces(df_Ispark["Saat48"])
 
-m_Ücret01 = convert_float(df_Ispark['Ücret01']).mean()
-m_Ücret12 = convert_float(df_Ispark['Ücret12']).mean()
-m_Ücret24 = convert_float(df_Ispark['Ücret24']).mean()
-m_Ücret48 = convert_float(df_Ispark['Ücret48']).mean()
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat01'], "0-1saat")
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat12'], "1-2saat")
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat24'], "2-4saat")
+df_Ispark = delete_unwanted_rows(df_Ispark,df_Ispark['Saat48'], "4-8saat")
+
+df_Ispark['Ücret01'] = convert_and_replace(df_Ispark['Ücret01'])
+df_Ispark['Ücret12'] = convert_and_replace(df_Ispark['Ücret12'])
+df_Ispark['Ücret24'] = convert_and_replace(df_Ispark['Ücret24'])
+df_Ispark['Ücret48'] = convert_and_replace(df_Ispark['Ücret48'])
+
+m_Ücret01 = df_Ispark['Ücret01'].mean()
+m_Ücret12 = df_Ispark['Ücret12'].mean()
+m_Ücret24 = df_Ispark['Ücret24'].mean()
+m_Ücret48 = df_Ispark['Ücret48'].mean()
+
 m_Ücret = [m_Ücret01.round(2), m_Ücret12.round(2), m_Ücret24.round(2), m_Ücret48.round(2)]
+m_Saat = ['0-1 Saat', '1-2 Saat', '2-4 Saat', '4-8 Saat']
+# Section - 3 | Visualization
 
-
-
-# Section - 3 | Bar Plot
-
-m_Ücret = m_Ücret
-m_Saat = ('0-1 Saat', '1-2 Saat', '2-4 Saat', '4-8 Saat')
-y_pos = np.arange(len(m_Saat))
-plt.bar(y_pos, m_Ücret)
-plt.xticks(y_pos, m_Saat)
-plt.title("Average Park Price per Time Period")
-plt.xlabel("Time Period")
-plt.ylabel("Price")
+plt.figure(figsize=(15,10))
+sns.barplot(x = m_Saat, y = m_Ücret, color='green', alpha = 0.4)
+plt.xticks(rotation = 45)
+plt.xlabel('Saatler')
+plt.ylabel("Ortalama Ücret")
+plt.title('SAAT ARALIKLARINA GÖRE ORTALAMA PARK ÜCRETİ GRAFİĞİ')
+plt.grid(axis='y', linestyle = '-')
 plt.show()
-
-
 
 
 
