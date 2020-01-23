@@ -2,6 +2,6 @@
 
 This project was created to visualize the relations between features of ISPARK dataset which was shared at the Istanbul Municipality's Website.
 
-![Figure_1](https://user-images.githubusercontent.com/52736554/72759141-d7a9cb00-3be5-11ea-9e0a-201492172fb5.png)
+![1  Grafik](https://user-images.githubusercontent.com/52736554/73032097-1abaa700-3e4f-11ea-9a67-d3f30bf24c67.png)
 
-![BarPlot](https://user-images.githubusercontent.com/52736554/72854081-4e1cfa80-3cc4-11ea-957c-0b802e92555e.png)
+![2  Grafik](https://user-images.githubusercontent.com/52736554/73032101-1db59780-3e4f-11ea-8d35-f10cf993e3ff.png)
