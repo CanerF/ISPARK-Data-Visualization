@@ -2,10 +2,12 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import openpyxl
 pd.set_option('display.max_columns', None)
 #pd.set_option('display.max_rows', None)
 path = "C:/Users/Caner Filiz/Desktop/Python/ispark-otoparklarna-ait-bilgiler.xlsx"
 sheetName ="İSPARK Otoparklarına Ait B."
+df_Ispark_saved = pd.read_excel(path, sheetName)
 df_Ispark = pd.read_excel(path, sheetName)
 class ISPARK():
     def __init__(self, dataFrame):
@@ -37,10 +39,10 @@ print(df_Ispark.columns)
 print(df_Ispark.info())
 
 # Corr Map
-#f,ax = plt.subplots(figsize=(18, 18))
-#sns.heatmap(ISPARK(df_Ispark).getCorr(), annot=True, linewidths=.100, fmt= '.1f',ax=ax)
-#plt.title("Correlation Chart")
-#plt.show()
+f,ax = plt.subplots(figsize=(18, 18))
+sns.heatmap(ISPARK(df_Ispark).getCorr(), annot=True, linewidths=.100, fmt= '.1f',ax=ax)
+plt.title("Korelasyon Grafiği")
+plt.show()
 
 # -- DATA CLEANING --
 
@@ -117,11 +119,11 @@ m_Ücret = [m_Ücret01.round(2), m_Ücret12.round(2), m_Ücret24.round(2), m_Üc
 m_Saat = ['0-1 Saat', '1-2 Saat', '2-4 Saat', '4-8 Saat']
 # Section - 3 | Visualization
 
-plt.figure(figsize=(15,10))
-sns.barplot(x = m_Saat, y = m_Ücret, color='green', alpha = 0.4)
+fig = plt.figure(figsize=(15,10))
+sns.barplot(x = m_Saat, y = m_Ücret, alpha = 1, palette="Blues_d")
 plt.xticks(rotation = 45)
-plt.xlabel('Saatler')
-plt.ylabel("Ortalama Ücret")
+plt.xlabel('Saat Aralıkları')
+plt.ylabel("Ortalama Ücret(TL)")
 plt.title('SAAT ARALIKLARINA GÖRE ORTALAMA PARK ÜCRETİ GRAFİĞİ')
 plt.grid(axis='y', linestyle = '-')
 plt.show()
